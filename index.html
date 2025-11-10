@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MysticMarket.hub - Quality Used Phones & Spare Parts</title>
-    <!-- Load Tailwind CSS -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Netlify Visual Editor requirement: Mapping the whole page object -->
+    <body data-sb-object-id="index" data-sb-field-path="Page">
+
     <style>
         /* Apply Inter font family and smooth scrolling */
         body {
@@ -15,19 +19,19 @@
             background-color: #000000; /* Pure black background */
             color: #E0E0E0; /* Light text for contrast */
         }
-        /* Custom gradient for hero and buttons (Very dark, tech-y vibe) */
+        /* Custom gradient for hero and buttons (Keeping a dark, tech-y vibe) */
         .gradient-bg {
-            background: linear-gradient(135deg, #0d0d0d, #1a1a1a); /* Dark to slightly less dark */
+            background: linear-gradient(135deg, #000000, #1a1a1a); /* Very dark to slightly less dark */
         }
         /* Style for the fixed header */
         .header-fixed {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-            background-color: #0d0d0d;
+            background-color: #0d0d0d; /* Darker header */
         }
         /* Product card background */
         .product-card-bg {
-            background-color: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background-color: #1a1a1a; /* Slightly lighter than body for product cards */
+            border: 1px solid #2a2a2a; /* Subtle border for definition */
         }
         /* Mobile menu background */
         .mobile-menu-bg {
@@ -47,35 +51,104 @@
                 opacity: 0.8;
             }
         }
-        /* Custom font for MysticMarket.hub text - matching logo aesthetic */
+        /* Custom font for MysticMarket.hub text - matching image aesthetic */
         .mystic-font-logo {
+            font-family: 'Georgia', serif; /* A common bold, blocky serif that can resemble the image */
+            letter-spacing: -0.05em; 
             font-weight: 900;
-            letter-spacing: -0.05em;
-            font-size: 1.75rem; /* text-2xl/3xl */
-            line-height: 1;
+            font-size: 1.5rem; /* Larger font size for prominence */
         }
+
+        /* Modal specific styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.8); 
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #444;
+            width: 90%; 
+            max-width: 600px;
+            border-radius: 12px;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0}
+            to {top: 0; opacity: 1}
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body class="bg-black text-gray-200">
 
-    <!-- Header & Navigation -->
+    <!-- Cart Modal Structure -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <h2 class="text-3xl font-extrabold text-indigo-400 mb-6">Your Cart</h2>
+            <div id="cartItemsContainer" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                <!-- Cart items will be rendered here by JavaScript -->
+                <p id="emptyCartMessage" class="text-gray-400">Your cart is currently empty.</p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-700">
+                <div class="flex justify-between items-center text-xl font-bold">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <button class="mt-6 w-full py-3 px-4 border border-transparent text-lg font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 transition duration-150 shadow-lg" onclick="mockCheckout()">
+                    Proceed to Secure Checkout
+                </button>
+                <div id="checkoutMessage" class="hidden mt-3 text-center text-sm font-medium"></div>
+            </div>
+        </div>
+    </div>
+
+
     <header class="header-fixed sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- LOGO/BRAND - FIXED: Using text logo until public image URL is available -->
-                <a href="#" class="flex items-center">
-                    <span class="text-white mystic-font-logo">MysticMarket.<span class="text-indigo-600">HUB</span></span>
+                
+                <a href="#" class="flex items-center space-x-2">
+                    <!-- Logo using the text aesthetic from the image -->
+                    <span class="text-white mystic-font-logo" data-sb-field-path="title">MysticMarket.<span class="text-indigo-600">HUB</span></span>
                 </a>
                 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8 font-medium items-center">
                     <a href="#products" class="text-gray-400 hover:text-indigo-400 transition duration-150">Shop Phones</a>
                     <a href="#parts" class="text-gray-400 hover:text-indigo-400 transition duration-150">Spare Parts</a>
-                    <a href="#gemini-match" class="text-gray-400 hover:text-indigo-400 transition duration-150 font-bold">AI Matchmaker</a>
                     <a href="#about" class="text-gray-400 hover:text-indigo-400 transition duration-150">Our Promise</a>
                     
-                    <!-- Cart Indicator -->
-                    <button id="cart-button" class="relative p-2 rounded-full text-gray-400 hover:bg-gray-800 transition duration-150">
+                    <!-- Cart Button - Desktop -->
+                    <button id="cart-button" onclick="openCartModal()" class="relative p-2 rounded-full text-gray-400 hover:bg-gray-800 transition duration-150">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13H5.4M17 17a1 1 0 100 2 1 1 0 000-2zm-6 0a1 1 0 100 2 1 1 0 000-2z"/>
                         </svg>
@@ -83,15 +156,16 @@
                     </button>
                 </nav>
 
-                <!-- Mobile Menu Button -->
+                <!-- Mobile Menu & Cart Button -->
                 <div class="flex items-center md:hidden">
                     <button id="mobile-menu-button" class="text-gray-400 hover:text-indigo-400 focus:outline-none mr-4">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
                         </svg>
                     </button>
-                    <!-- Mobile Cart Indicator -->
-                     <button id="cart-button-mobile" class="relative p-2 rounded-full text-gray-400 hover:bg-gray-800 transition duration-150">
+                    
+                    <!-- Cart Button - Mobile -->
+                    <button id="cart-button-mobile" onclick="openCartModal()" class="relative p-2 rounded-full text-gray-400 hover:bg-gray-800 transition duration-150">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13H5.4M17 17a1 1 0 100 2 1 1 0 000-2zm-6 0a1 1 0 100 2 1 1 0 000-2z"/>
                         </svg>
@@ -101,28 +175,29 @@
             </div>
         </div>
         
-        <!-- Mobile Menu (Hidden by default) -->
+        <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden mobile-menu-bg">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
                 <a href="#products" class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-indigo-700" onclick="toggleMenu()">Shop Phones</a>
                 <a href="#parts" class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-indigo-700" onclick="toggleMenu()">Spare Parts</a>
-                <a href="#gemini-match" class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-indigo-700 font-bold" onclick="toggleMenu()">AI Matchmaker</a>
                 <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-indigo-700" onclick="toggleMenu()">Our Promise</a>
                 <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:bg-indigo-700" onclick="toggleMenu()">Support</a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    
     <main>
         
-        <!-- 1. Hero Section (Marketplace Focus) -->
+        <!-- Hero Section -->
         <section id="hero" class="gradient-bg text-white py-16 sm:py-24 lg:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4">
-                    Your Hub for <span class="text-indigo-400">Tested Tech</span> & Reliable Parts
+                <!-- Editable Hero Heading -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4" data-sb-field-path="hero_heading">
+                    Your Hub for Tested <span class="text-indigo-400">Tech</span> & Reliable Parts
                 </h1>
-                <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-400 sm:mt-5">
+                <!-- Editable Hero Tagline -->
+                <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-300 sm:mt-5" data-sb-field-path="hero_tagline">
                     Find quality second-hand phones, refurbished devices, and all the spare components you need to keep your gear running.
                 </p>
                 <div class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
@@ -133,66 +208,78 @@
             </div>
         </section>
 
-        <!-- 2. Product Catalog (Phones) -->
-        <section id="products" class="py-16 sm:py-24 bg-black">
+        <!-- Product Phones Section -->
+        <section id="products" class="py-16 sm:py-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <h2 class="text-base text-indigo-400 font-semibold tracking-wide uppercase">Certified Used</h2>
-                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-50 sm:text-4xl">
                         Featured Phones & Devices
                     </p>
                 </div>
 
                 <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     
-                    <!-- Product Card 1: Used Phone -->
-                    <div class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
-                        <!-- Placeholder Image URL for a Phone -->
+                    <!-- Product Card 1: iPhone 11 (Editable) -->
+                    <div data-sb-object-id="Product-1" class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+                        
                         <img class="w-full h-64 object-cover" 
-                             src="https://placehold.co/600x400/10B981/ffffff?text=iPhone+11+(Grade+A)" 
+                             src="https://placehold.co/600x400/1E3A8A/ffffff?text=iPhone+11" 
                              alt="Used iPhone 11 (64GB, Green)">
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-white">iPhone 11 (64GB, Green)</h3>
-                            <p class="mt-2 text-sm text-gray-400 line-through">$450.00</p>
-                            <p class="text-2xl font-extrabold text-indigo-400 mt-1">$349.99</p>
-                            <p class="mt-3 text-sm text-gray-300">Condition: Excellent (Grade A)</p>
-                            <button data-item="iPhone 11" onclick="addToCart(this)"
+                            <!-- Editable Product Name -->
+                            <h3 class="text-xl font-bold text-gray-50" data-sb-field-path="name">iPhone 11 (64GB, Green)</h3>
+                            <!-- Editable Old Price -->
+                            <p class="mt-2 text-sm text-gray-400 line-through" data-sb-field-path="old_price">$450.00</p>
+                            <!-- Editable Current Price -->
+                            <p class="text-2xl font-extrabold text-indigo-400 mt-1" data-sb-field-path="price">$349.99</p>
+                            <!-- Editable Condition -->
+                            <p class="mt-3 text-sm text-gray-300" data-sb-field-path="condition">Condition: Excellent (Grade A)</p>
+                            <button data-item="iPhone 11" data-price="349.99" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 transform hover:scale-[1.01]">
                                 Add to Cart
                             </button>
                         </div>
                     </div>
 
-                    <!-- Product Card 2: Used Phone -->
-                    <div class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
-                        <!-- Placeholder Image URL for a Phone -->
+                    <!-- Product Card 2: Galaxy S20 (Editable) -->
+                    <div data-sb-object-id="Product-2" class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+                        
                         <img class="w-full h-64 object-cover" 
-                             src="https://placehold.co/600x400/F59E0B/ffffff?text=Samsung+S20+(Grade+B)" 
+                             src="https://placehold.co/600x400/6D28D9/ffffff?text=Galaxy+S20" 
                              alt="Used Samsung Galaxy S20 (128GB, Grey)">
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-white">Galaxy S20 (128GB, Grey)</h3>
-                            <p class="mt-2 text-sm text-gray-400 line-through">$399.00</p>
-                            <p class="text-2xl font-extrabold text-indigo-400 mt-1">$289.00</p>
-                            <p class="mt-3 text-sm text-gray-300">Condition: Very Good (Grade B)</p>
-                            <button data-item="Galaxy S20" onclick="addToCart(this)"
+                            <!-- Editable Product Name -->
+                            <h3 class="text-xl font-bold text-gray-50" data-sb-field-path="name">Galaxy S20 (128GB, Grey)</h3>
+                            <!-- Editable Old Price -->
+                            <p class="mt-2 text-sm text-gray-400 line-through" data-sb-field-path="old_price">$399.00</p>
+                            <!-- Editable Current Price -->
+                            <p class="text-2xl font-extrabold text-indigo-400 mt-1" data-sb-field-path="price">$289.00</p>
+                            <!-- Editable Condition -->
+                            <p class="mt-3 text-sm text-gray-300" data-sb-field-path="condition">Condition: Very Good (Grade B)</p>
+                            <button data-item="Galaxy S20" data-price="289.00" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 transform hover:scale-[1.01]">
                                 Add to Cart
                             </button>
                         </div>
                     </div>
 
-                    <!-- Product Card 3: Used Phone -->
-                    <div class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
-                        <!-- Placeholder Image URL for a Phone -->
+                    <!-- Product Card 3: Pixel 6 (Editable) -->
+                    <div data-sb-object-id="Product-3" class="group product-card-bg rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
+                        
                         <img class="w-full h-64 object-cover" 
-                             src="https://placehold.co/600x400/EF4444/ffffff?text=Pixel+6+(Grade+A+)" 
+                             src="https://placehold.co/600x400/94A3B8/ffffff?text=Pixel+6" 
                              alt="Used Google Pixel 6 (256GB, Black)">
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-white">Pixel 6 (256GB, Black)</h3>
-                            <p class="mt-2 text-sm text-gray-400 line-through">$550.00</p>
-                            <p class="text-2xl font-extrabold text-indigo-400 mt-1">$419.50</p>
-                            <p class="mt-3 text-sm text-gray-300">Condition: Pristine (Grade A+)</p>
-                            <button data-item="Pixel 6" onclick="addToCart(this)"
+                            <!-- Editable Product Name -->
+                            <h3 class="text-xl font-bold text-gray-50" data-sb-field-path="name">Pixel 6 (256GB, Black)</h3>
+                            <!-- Editable Old Price -->
+                            <p class="mt-2 text-sm text-gray-400 line-through" data-sb-field-path="old_price">$550.00</p>
+                            <!-- Editable Current Price -->
+                            <p class="text-2xl font-extrabold text-indigo-400 mt-1" data-sb-field-path="price">$419.50</p>
+                            <!-- Editable Condition -->
+                            <p class="mt-3 text-sm text-gray-300" data-sb-field-path="condition">Condition: Pristine (Grade A+)</p>
+                            <button data-item="Pixel 6" data-price="419.50" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 transform hover:scale-[1.01]">
                                 Add to Cart
                             </button>
@@ -203,65 +290,73 @@
             </div>
         </section>
 
-        <!-- 3. Spare Parts Section (New ID) -->
+        <!-- Spare Parts Section -->
         <section id="parts" class="py-16 sm:py-24 bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <h2 class="text-base text-indigo-400 font-semibold tracking-wide uppercase">DIY Repair</h2>
-                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-50 sm:text-4xl">
                         Reliable Spare Parts for Every Model
                     </p>
                 </div>
 
                 <div class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     
-                    <!-- Part 1: Battery -->
-                    <div class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
+                    <!-- Part Card 4: S21 Battery (Editable) -->
+                    <div data-sb-object-id="Product-4" class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
                          <img class="h-20 w-auto mb-4" 
-                             src="https://placehold.co/100x80/2563EB/ffffff?text=Battery" 
+                             src="https://placehold.co/80x80/22C55E/ffffff?text=Battery" 
                              alt="Spare Battery">
-                        <h3 class="text-lg font-semibold text-white">Samsung S21 Battery</h3>
-                        <p class="text-xl font-bold text-indigo-400 mt-1">$35.00</p>
-                        <button data-item="S21 Battery" onclick="addToCart(this)"
+                        <!-- Editable Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-50" data-sb-field-path="name">Samsung S21 Battery</h3>
+                        <!-- Editable Current Price -->
+                        <p class="text-xl font-bold text-indigo-400 mt-1" data-sb-field-path="price">$35.00</p>
+                        <button data-item="S21 Battery" data-price="35.00" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-150">
                                 Add to Cart
                             </button>
                     </div>
 
-                    <!-- Part 2: Screen -->
-                    <div class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
+                    <!-- Part Card 5: iPhone 12 Pro Screen (Editable) -->
+                    <div data-sb-object-id="Product-5" class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
                         <img class="h-20 w-auto mb-4" 
-                             src="https://placehold.co/100x80/4F46E5/ffffff?text=Screen" 
+                             src="https://placehold.co/80x80/0EA5E9/ffffff?text=Screen" 
                              alt="Replacement Screen">
-                        <h3 class="text-lg font-semibold text-white">iPhone 12 Pro Screen (OEM)</h3>
-                        <p class="text-xl font-bold text-indigo-400 mt-1">$120.00</p>
-                        <button data-item="iPhone 12 Screen" onclick="addToCart(this)"
+                        <!-- Editable Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-50" data-sb-field-path="name">iPhone 12 Pro Screen (OEM)</h3>
+                        <!-- Editable Current Price -->
+                        <p class="text-xl font-bold text-indigo-400 mt-1" data-sb-field-path="price">$120.00</p>
+                        <button data-item="iPhone 12 Screen" data-price="120.00" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-150">
                                 Add to Cart
                             </button>
                     </div>
 
-                    <!-- Part 3: Charging Port -->
-                    <div class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
+                    <!-- Part Card 6: USB-C Charging Port (Editable) -->
+                    <div data-sb-object-id="Product-6" class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
                         <img class="h-20 w-auto mb-4" 
-                             src="https://placehold.co/100x80/9333EA/ffffff?text=Port" 
+                             src="https://placehold.co/80x80/8B5CF6/ffffff?text=Port" 
                              alt="Charging Port">
-                        <h3 class="text-lg font-semibold text-white">USB-C Charging Port</h3>
-                        <p class="text-xl font-bold text-indigo-400 mt-1">$15.99</p>
-                        <button data-item="USB-C Port" onclick="addToCart(this)"
+                        <!-- Editable Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-50" data-sb-field-path="name">USB-C Charging Port</h3>
+                        <!-- Editable Current Price -->
+                        <p class="text-xl font-bold text-indigo-400 mt-1" data-sb-field-path="price">$15.99</p>
+                        <button data-item="USB-C Port" data-price="15.99" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-150">
                                 Add to Cart
                             </button>
                     </div>
 
-                    <!-- Part 4: Camera Lens -->
-                    <div class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
+                    <!-- Part Card 7: Camera Lens (Editable) -->
+                    <div data-sb-object-id="Product-7" class="p-6 product-card-bg rounded-xl shadow-md flex flex-col items-center text-center">
                         <img class="h-20 w-auto mb-4" 
-                             src="https://placehold.co/100x80/FBBF24/ffffff?text=Lens" 
+                             src="https://placehold.co/80x80/FBBF24/ffffff?text=Lens" 
                              alt="Camera Lens">
-                        <h3 class="text-lg font-semibold text-white">Pixel 7 Rear Camera Lens</h3>
-                        <p class="text-xl font-bold text-indigo-400 mt-1">$22.50</p>
-                        <button data-item="Pixel 7 Lens" onclick="addToCart(this)"
+                        <!-- Editable Product Name -->
+                        <h3 class="text-lg font-semibold text-gray-50" data-sb-field-path="name">Pixel 7 Rear Camera Lens</h3>
+                        <!-- Editable Current Price -->
+                        <p class="text-xl font-bold text-indigo-400 mt-1" data-sb-field-path="price">$22.50</p>
+                        <button data-item="Pixel 7 Lens" data-price="22.50" onclick="addToCart(this)"
                                 class="mt-4 w-full py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition duration-150">
                                 Add to Cart
                             </button>
@@ -271,12 +366,45 @@
             </div>
         </section>
 
-        <!-- 4. Our Promise/About Us Section -->
-        <section id="about" class="py-16 sm:py-24 bg-black">
+        <!-- AI Matchmaker Section -->
+        <section id="ai-matchmaker" class="py-16 sm:py-24 gradient-bg text-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-base text-indigo-400 font-semibold tracking-wide uppercase">Gemini AI Assistant</h2>
+                    <p class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                        AI Tech Matchmaker
+                    </p>
+                    <p class="mt-4 text-lg text-indigo-200">
+                        Ask our AI for a phone recommendation based on your needs, or check part compatibility.
+                    </p>
+                </div>
+
+                <div class="mt-10 bg-gray-800 p-8 rounded-xl shadow-2xl">
+                    <textarea id="aiQuery" rows="3" placeholder="E.g., Which phone is best for taking photos under $300? or Is a Galaxy S10 screen compatible with the S10e?"
+                        class="w-full p-4 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    
+                    <button onclick="getAiRecommendation()"
+                        class="mt-4 w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                        Ask the Matchmaker
+                    </button>
+
+                    <div id="aiResponseContainer" class="mt-6 pt-4 border-t border-gray-700">
+                        <p id="aiLoading" class="hidden text-center text-indigo-400 font-medium">Analyzing your request...</p>
+                        <div id="aiRecommendation" class="text-gray-300 space-y-3">
+                            <!-- AI response will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- About/Promise Section -->
+        <section id="about" class="py-16 sm:py-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="lg:text-center">
                     <h2 class="text-base text-indigo-400 font-semibold tracking-wide uppercase">Confidence in Used</h2>
-                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
+                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-50 sm:text-4xl">
                         Why Choose MysticMarket.hub?
                     </p>
                 </div>
@@ -308,64 +436,29 @@
                         </ul>
                     </div>
                     <div class="mt-10 lg:mt-0">
-                        <!-- Placeholder Image (Responsive) -->
+                        
                         <img class="w-full h-auto rounded-xl shadow-2xl" 
-                             src="https://placehold.co/600x400/374151/ffffff?text=Quality+Inspected+Devices" 
-                             alt="Technician inspecting a smartphone">
+                             src="https://placehold.co/600x400/1e293b/ffffff?text=Quality+Check" 
+                             alt="Technician inspecting a smartphone with holographic elements">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 5. Gemini Tech Matchmaker Section -->
-        <section id="gemini-match" class="py-16 sm:py-24 bg-gray-950 text-white">
-            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base text-indigo-400 font-semibold tracking-wide uppercase">Powered by Gemini</h2>
-                    <p class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                        AI Tech Matchmaker
-                    </p>
-                    <p class="mt-4 text-lg text-gray-400">
-                        Ask our AI assistant about part compatibility, repair advice, or which phone best fits your needs.
-                    </p>
-                </div>
-
-                <form id="matchmakerForm" class="mt-12 space-y-6 p-8 rounded-xl product-card-bg shadow-2xl">
-                    <label for="geminiQuery" class="block text-sm font-medium text-gray-300">Your Question:</label>
-                    <textarea id="geminiQuery" rows="3" required
-                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-700 rounded-lg p-3 bg-gray-700 text-white" 
-                        placeholder="E.g., Which screen is compatible with an iPhone 12 Pro? or Recommend a cheap phone for gaming."></textarea>
-                    
-                    <button type="submit" id="matchmakerButton"
-                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50">
-                        Get AI Advice
-                    </button>
-                    
-                    <div id="geminiResult" class="mt-8 p-4 rounded-xl border border-indigo-500 bg-gray-800 text-gray-100 hidden">
-                        <p class="font-bold text-indigo-400 mb-2 flex items-center">
-                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.047A12.007 12.007 0 002.944 12c0 3.047 1.071 5.766 2.766 7.97A12.007 12.007 0 0012 21.056a12.007 12.007 0 006.29-1.086c1.695-2.204 2.766-4.923 2.766-7.97a12.007 12.007 0 00-.098-.777z"/></svg>
-                            Gemini AI Response
-                        </p>
-                        <p id="geminiText"></p>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- 6. Contact/Support Section -->
+        <!-- Contact Form Section -->
         <section id="contact" class="py-16 sm:py-24 gradient-bg text-white">
             <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-base text-indigo-300 font-semibold tracking-wide uppercase">Traditional Support</h2>
+                    <h2 class="text-base text-indigo-300 font-semibold tracking-wide uppercase">Need Help?</h2>
                     <p class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                        Contact Our Support Team
+                        Contact Our Tech Support Team
                     </p>
                     <p class="mt-4 text-lg text-indigo-200">
                         If you have questions about a specific product, part compatibility, or your order, reach out below.
                     </p>
                 </div>
 
-                <form id="contactForm" class="mt-12 space-y-6 product-card-bg p-8 rounded-xl shadow-2xl">
+                <form id="contactForm" class="mt-12 space-y-6 bg-gray-800 p-8 rounded-xl shadow-2xl">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-300">Full Name</label>
                         <div class="mt-1">
@@ -396,7 +489,6 @@
                         Send Inquiry
                     </button>
                     
-                    <!-- Message Box for Success/Error -->
                     <div id="messageBox" class="hidden text-center py-3 rounded-lg font-medium" role="alert"></div>
                 </form>
             </div>
@@ -404,7 +496,7 @@
 
     </main>
 
-    <!-- Footer -->
+    
     <footer class="bg-gray-950 py-8 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-sm text-gray-500">&copy; <span id="currentYear"></span> MysticMarket.hub. All rights reserved.</p>
@@ -415,16 +507,186 @@
         </div>
     </footer>
 
-    <!-- JavaScript for Interactivity, Cart Logic, and Gemini API Integration -->
+    
     <script>
-        // --- Gemini API Configuration (Mocked for Demo) ---
-        const API_KEY = ""; // Placeholder: The system provides this at runtime
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
-        
-        // --- Utility Functions ---
+        // --- CART LOGIC ---
 
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const CART_KEY = 'mysticMarketCart';
+
+        // Initialize cart from session storage or start empty
+        function getCart() {
+            try {
+                const cartData = sessionStorage.getItem(CART_KEY);
+                return cartData ? JSON.parse(cartData) : [];
+            } catch (e) {
+                console.error("Could not load cart from storage:", e);
+                return [];
+            }
+        }
+
+        function saveCart(cart) {
+            try {
+                sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+                updateCartDisplay();
+                renderCart();
+            } catch (e) {
+                console.error("Could not save cart to storage:", e);
+            }
+        }
+
+        // Updates the counter badge in the header
+        function updateCartDisplay() {
+            const cart = getCart();
+            const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cart-count').textContent = itemCount;
+            document.getElementById('cart-count-mobile').textContent = itemCount;
+            return itemCount;
+        }
+
+        // Adds an item to the cart or increments its quantity
+        function addToCart(buttonElement) {
+            const itemName = buttonElement.getAttribute('data-item');
+            const itemPrice = parseFloat(buttonElement.getAttribute('data-price'));
+            
+            if (!itemName || isNaN(itemPrice)) {
+                console.error("Missing item data for cart.");
+                return;
+            }
+
+            let cart = getCart();
+            const existingItem = cart.find(item => item.name === itemName);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+            }
+
+            saveCart(cart);
+            
+            // Visual Feedback
+            buttonElement.textContent = `Added! (${updateCartDisplay()})`;
+            buttonElement.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'bg-green-600', 'hover:bg-green-700');
+            buttonElement.classList.add('bg-yellow-500');
+
+            setTimeout(() => {
+                buttonElement.textContent = 'Add to Cart';
+                buttonElement.classList.remove('bg-yellow-500');
+                if (buttonElement.closest('#products') || buttonElement.closest('#aiRecommendation')) {
+                    buttonElement.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                } else { 
+                    buttonElement.classList.add('bg-green-600', 'hover:bg-green-700');
+                }
+            }, 1000);
+        }
+
+        // Renders the cart contents inside the modal
+        function renderCart() {
+            const cart = getCart();
+            const container = document.getElementById('cartItemsContainer');
+            const subtotalElement = document.getElementById('cartSubtotal');
+            const emptyMessage = document.getElementById('emptyCartMessage');
+            
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p id="emptyCartMessage" class="text-gray-400">Your cart is currently empty.</p>';
+                subtotalElement.textContent = '$0.00';
+                return;
+            }
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const itemHtml = `
+                    <div class="flex justify-between items-center p-3 bg-gray-900 rounded-lg">
+                        <div class="flex-1">
+                            <p class="font-semibold text-white">${item.name}</p>
+                            <p class="text-sm text-gray-400">$${item.price.toFixed(2)} each</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="updateQuantity('${item.name}', -1)" class="text-indigo-400 hover:text-indigo-300 font-bold text-xl">-</button>
+                            <span class="text-white w-5 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)" class="text-indigo-400 hover:text-indigo-300 font-bold text-xl">+</button>
+                            <button onclick="removeItem('${item.name}')" class="text-red-500 hover:text-red-400 text-sm">Remove</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += itemHtml;
+            });
+
+            subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        // Handles quantity changes in the modal
+        function updateQuantity(itemName, delta) {
+            let cart = getCart();
+            const itemIndex = cart.findIndex(item => item.name === itemName);
+
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += delta;
+                if (cart[itemIndex].quantity <= 0) {
+                    // Remove if quantity drops to zero or less
+                    cart.splice(itemIndex, 1);
+                }
+                saveCart(cart);
+            }
+        }
+
+        // Handles item removal from the modal
+        function removeItem(itemName) {
+            let cart = getCart();
+            const newCart = cart.filter(item => item.name !== itemName);
+            saveCart(newCart);
+        }
+
+        // Mock Checkout Process
+        function mockCheckout() {
+            const messageBox = document.getElementById('checkoutMessage');
+            messageBox.classList.remove('hidden', 'text-red-500');
+            messageBox.classList.add('text-green-500');
+            messageBox.textContent = 'Simulating secure transaction...';
+            
+            setTimeout(() => {
+                sessionStorage.removeItem(CART_KEY);
+                updateCartDisplay();
+                closeCartModal();
+                alertMessage('Success! Your order has been placed. (This is a demo checkout.)');
+            }, 1500);
+        }
+
+
+        // --- MODAL & UI LOGIC ---
+
+        function openCartModal() {
+            renderCart();
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target == modal) {
+                closeCartModal();
+            }
+        }
+
+        // Simple alert message box (as we can't use alert())
+        function alertMessage(message, isError = false) {
+            const container = document.getElementById('checkoutMessage');
+            container.classList.remove('hidden', 'text-green-500', 'text-red-500');
+            container.classList.add(isError ? 'text-red-500' : 'text-green-500', 'block');
+            container.textContent = message;
+            setTimeout(() => {
+                container.classList.add('hidden');
+            }, 5000);
+        }
 
         // Mobile menu toggle logic
         function toggleMenu() {
@@ -434,125 +696,102 @@
 
         document.getElementById('mobile-menu-button').addEventListener('click', toggleMenu);
         
-        // --- Cart Logic (Mock) ---
-        let cartItemCount = 0;
-        function updateCartDisplay() {
-            document.getElementById('cart-count').textContent = cartItemCount;
-            document.getElementById('cart-count-mobile').textContent = cartItemCount;
-
-            const cartIcon = document.getElementById('cart-count');
-            cartIcon.classList.add('bg-yellow-500', 'cart-pulse');
-            
-            setTimeout(() => {
-                cartIcon.classList.remove('bg-yellow-500', 'cart-pulse');
-            }, 1000);
-        }
-
-        function addToCart(buttonElement) {
-            const itemName = buttonElement.getAttribute('data-item');
-            cartItemCount++;
-            updateCartDisplay();
-            
-            buttonElement.textContent = `Added ${itemName}!`;
-            buttonElement.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'bg-green-600', 'hover:bg-green-700');
-            buttonElement.classList.add('bg-yellow-500');
-
-            setTimeout(() => {
-                buttonElement.textContent = 'Add to Cart';
-                buttonElement.classList.remove('bg-yellow-500');
-                if (buttonElement.closest('#products')) {
-                    buttonElement.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-                } else {
-                    buttonElement.classList.add('bg-green-600', 'hover:bg-green-700');
-                }
-            }, 1200);
-        }
         
-        // --- Gemini Matchmaker Logic ---
+        // --- GEMINI AI LOGIC (MOCKED) ---
 
-        // Mock data to simulate the API response and avoid real calls in the demo environment
-        const mockResponses = [
-            "Based on your query, the screen for the iPhone X uses OLED technology. We recommend part **MM-SCR-IXOLED**. It is compatible and currently in stock!",
-            "For a student needing a cheap, reliable phone, we recommend checking out the **Galaxy S20** featured in our catalog. It offers excellent battery life and performance for its low price point.",
-            "That's a great question! The **Samsung S21 Battery** (Part MM-BAT-S21) is compatible with all SM-G991U models. Always double-check your exact model number under 'Settings > About Phone'!",
-            "If you are experiencing slow charging on a Pixel 6, it could be the **USB-C Charging Port**. Our part is tested for high-speed charging compatibility. DIY repair difficulty is moderate."
-        ];
-        
-        // Function to make the mock API call
-        function callGeminiAPI(prompt) {
-            // In a real application, this would be an asynchronous fetch request to the Gemini API.
-            // For this single-file demo, we use a mock response.
+        // Mock API call to Gemini
+        async function getAiRecommendation() {
+            const query = document.getElementById('aiQuery').value.trim();
+            const loading = document.getElementById('aiLoading');
+            const responseContainer = document.getElementById('aiRecommendation');
             
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    const response = {
-                        text: mockResponses[Math.floor(Math.random() * mockResponses.length)],
-                        sources: [] // Mocking no sources for simplicity
-                    };
-                    resolve(response);
-                }, 2000); // Simulate network delay
-            });
-        }
-
-        document.getElementById('matchmakerForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const queryInput = document.getElementById('geminiQuery');
-            const resultBox = document.getElementById('geminiResult');
-            const resultText = document.getElementById('geminiText');
-            const submitButton = document.getElementById('matchmakerButton');
-
-            const query = queryInput.value.trim();
             if (!query) return;
 
-            // Show loading state
-            resultBox.classList.remove('hidden');
-            resultBox.classList.remove('bg-red-800', 'border-red-500');
-            resultBox.classList.add('bg-gray-800', 'border-indigo-500');
-            resultText.innerHTML = `<span class="flex items-center"><svg class="h-4 w-4 mr-2 animate-spin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="60"></circle></svg> Finding the perfect match...</span>`;
-            
-            submitButton.disabled = true;
+            // Clear previous response and show loading
+            responseContainer.innerHTML = '';
+            loading.classList.remove('hidden');
 
-            try {
-                const response = await callGeminiAPI(query);
-                
-                // Display the response
-                resultText.innerHTML = response.text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); 
+            const mockDelay = 1800; // Simulate network delay
 
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                resultBox.classList.remove('bg-gray-800', 'border-indigo-500');
-                resultBox.classList.add('bg-red-800', 'border-red-500');
-                resultText.innerHTML = "Sorry, an error occurred while fetching the AI advice. Please try again later.";
-            } finally {
-                submitButton.disabled = false;
+            // Check if the query asks for a specific known product/part
+            let mockResponse = '';
+            let recommendedItem = null;
+            let recommendedPrice = 0;
+
+            if (query.toLowerCase().includes('photo') && query.toLowerCase().includes('$300')) {
+                recommendedItem = "Galaxy S20";
+                recommendedPrice = 289.00;
+                mockResponse = `Based on your budget and focus on photography, we recommend the **Galaxy S20**. Its advanced camera sensor still outperforms most new budget phones, and at **$289.00** (Grade B), it fits perfectly within your price range. It offers excellent value and a vibrant AMOLED screen for viewing your shots.`;
+            } else if (query.toLowerCase().includes('screen compatible') && query.toLowerCase().includes('s10')) {
+                recommendedItem = "iPhone 12 Screen";
+                recommendedPrice = 120.00;
+                mockResponse = `The Galaxy S10 screen is **not compatible** with the S10e due to size and connector differences. You need the specific S10e display assembly. We have the **iPhone 12 Pro Screen (OEM)** listed for **$120.00**, which is a highly sought-after, compatible part for that model.`;
+            } else {
+                recommendedItem = "Pixel 7 Lens";
+                recommendedPrice = 22.50;
+                mockResponse = `That's a complex question! After checking the latest spec sheets, the best device that balances performance and longevity is the **Pixel 7 Rear Camera Lens** part. This component is highly reliable and is priced at just **$22.50**—a great upgrade for your repair kit!`;
             }
-        });
 
-        // --- Standard Contact Form Logic ---
+            setTimeout(() => {
+                loading.classList.add('hidden');
+                
+                // Display the main response
+                responseContainer.innerHTML = `<p class="whitespace-pre-wrap">${mockResponse}</p>`;
+
+                // If an item was recommended, append the Add to Cart button
+                if (recommendedItem && recommendedPrice > 0) {
+                    const buttonHtml = `
+                        <div class="mt-4 pt-3 border-t border-gray-700 flex justify-end">
+                            <button data-item="${recommendedItem}" data-price="${recommendedPrice.toFixed(2)}" onclick="addToCart(this)"
+                                class="py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 transform hover:scale-[1.01]">
+                                Add ${recommendedItem} to Cart
+                            </button>
+                        </div>
+                    `;
+                    responseContainer.innerHTML += buttonHtml;
+                }
+            }, mockDelay);
+        }
+
+
+        // --- INIT LOGIC ---
+
+        window.onload = function () {
+            // Set current year in footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Initialize cart display and render items if any exist
+            updateCartDisplay();
+            renderCart();
+        };
+
+        
+        // --- Form Submission Logic (MOCKED) ---
         document.getElementById('contactForm').addEventListener('submit', function(event) {
-            event.preventDefault(); 
+            event.preventDefault(); // Prevent default form submission
 
             const form = event.target;
             const messageBox = document.getElementById('messageBox');
             
             const name = document.getElementById('name').value;
             
+            // Simulate API call delay
             messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
-            messageBox.classList.add('bg-indigo-700', 'text-indigo-100');
+            messageBox.classList.add('bg-indigo-100', 'text-indigo-700');
             messageBox.innerHTML = 'Sending inquiry...';
 
             setTimeout(() => {
-                messageBox.classList.remove('bg-indigo-700', 'text-indigo-100');
-                messageBox.classList.add('bg-green-700', 'text-green-100');
+                // Show success message
+                messageBox.classList.remove('bg-indigo-100', 'text-indigo-700');
+                messageBox.classList.add('bg-green-100', 'text-green-700');
                 messageBox.innerHTML = `Success, ${name}! We've logged your request and will follow up via email shortly.`;
                 messageBox.classList.remove('hidden');
+
+                // Clear the form fields after a successful submission
                 form.reset();
-            }, 1500); 
+            }, 1500); // 1.5 second delay
         });
 
-        // Initialize cart display
-        updateCartDisplay();
     </script>
 </body>
 </html>
